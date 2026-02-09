@@ -487,12 +487,15 @@ async function processSale() {
         });
 
         if (res.ok) {
-            alert('Sale Completed Successfully!');
+            const result = await res.json();
             state.cart = [];
             state.discount = 0;
             elements.discountInput.value = 0;
             updateCart();
             await syncData();
+
+            // Show Receipt
+            showReceipt(saleData);
         } else {
             const err = await res.json();
             alert(getErrorMessage(err));
@@ -502,6 +505,58 @@ async function processSale() {
     }
 }
 
+// Receipt Logic
+window.showReceipt = (sale) => {
+    const modal = document.getElementById('modal-container');
+    const title = document.getElementById('modal-title');
+    const body = document.getElementById('modal-body');
+
+    title.innerText = 'Purchase Receipt';
+    const subtotal = sale.items.reduce((sum, item) => sum + item.total, 0);
+    const total = subtotal * (1 - sale.discount / 100);
+
+    body.innerHTML = `
+        <div class="receipt-container" id="printable-receipt">
+            <div class="receipt-header">
+                <h2>HARDWARE POS</h2>
+                <p>Nairobi, Kenya</p>
+                <p>Date: ${new Date().toLocaleString()}</p>
+            </div>
+            ${sale.items.map(item => `
+                <div class="receipt-line">
+                    <span>${item.name} (x${item.quantity})</span>
+                    <span>KSh ${item.total.toLocaleString()}</span>
+                </div>
+            `).join('')}
+            <div class="receipt-total">
+                <div class="receipt-line">
+                    <span>Subtotal</span>
+                    <span>KSh ${subtotal.toLocaleString()}</span>
+                </div>
+                <div class="receipt-line">
+                    <span>Discount</span>
+                    <span>${sale.discount}%</span>
+                </div>
+                <div class="receipt-line" style="font-size: 1.2rem; margin-top: 0.5rem;">
+                    <span>TOTAL</span>
+                    <span>KSh ${total.toLocaleString()}</span>
+                </div>
+            </div>
+            <div class="receipt-footer">
+                <p>Served by: ${sale.served_by}</p>
+                <p>Payment: ${sale.payment_method}</p>
+                <p>Thank you for shopping with us!</p>
+            </div>
+        </div>
+        <button class="btn-primary w-100" style="margin-top: 2rem;" onclick="window.print()">
+            <i data-lucide="printer"></i> Print Receipt
+        </button>
+    `;
+
+    modal.classList.remove('hidden');
+    refreshIcons();
+};
+
 // Reports Logic
 async function renderReportsView() {
     try {
@@ -509,15 +564,40 @@ async function renderReportsView() {
         const salesData = await res.json();
         const tbody = document.querySelector('#sales-history-table tbody');
         if (!tbody) return;
+
+        // Group items back into sales if possible, or just render rows
         tbody.innerHTML = salesData.map(sale => `
-        < tr >
+            <tr>
                 <td>${sale['Date & Time']}</td>
                 <td>${sale['Item Name']}</td>
                 <td>${sale['Quantity Sold']}</td>
                 <td>KSh ${sale['Total Sale Amount'].toLocaleString()}</td>
-            </tr >
+                <td>
+                    <button class="btn-print-sm" onclick='window.showReceiptFromHistory(${JSON.stringify(sale).replace(/'/g, "&apos;")})'>
+                        <i data-lucide="printer"></i>
+                    </button>
+                </td>
+            </tr>
         `).reverse().join('');
+        refreshIcons();
     } catch (err) {
         console.error('Failed to load reports:', err);
     }
 }
+
+// Global helper for historical receipts
+window.showReceiptFromHistory = (saleRow) => {
+    // Map backend row format to the showReceipt format
+    const saleData = {
+        items: [{
+            name: saleRow['Item Name'],
+            quantity: saleRow['Quantity Sold'],
+            total: saleRow['Total Sale Amount'],
+            unit_price: saleRow['Unit Price'] || (saleRow['Total Sale Amount'] / saleRow['Quantity Sold'])
+        }],
+        payment_method: saleRow['Payment Method'] || 'N/A',
+        served_by: saleRow['Served By'] || 'System',
+        discount: saleRow['Discount Applied'] || 0
+    };
+    showReceipt(saleData);
+};
