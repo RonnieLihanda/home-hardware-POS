@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# Data Files
+*.xlsx
+*.xls
+*.csv
+!template_data.xlsx
+
+# IDE
+.vscode/
+.idea/
+.DS_Store
