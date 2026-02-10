@@ -36,17 +36,26 @@ const elements = {
 document.addEventListener('DOMContentLoaded', () => {
     console.log("POS System initializing...");
 
-    // 1. Core Logic (Must run first)
-    setupNavigation();
-    setupSalesLogic();
-    setupInventoryLogic();
-    setupPurchaseLogic();
-    setupModalLogic();
+    try {
+        // 1. Core Logic (Must run first)
+        setupNavigation();
+        setupSalesLogic();
+        setupInventoryLogic();
+        setupPurchaseLogic();
+        setupModalLogic();
+        console.log("Core logic setup complete.");
+    } catch (e) {
+        console.error("Critical error during logic setup:", e);
+    }
 
-    // 2. Data Loading (Async)
-    syncData();
-
-    startClock();
+    try {
+        // 2. Data Loading (Async)
+        syncData();
+        startClock();
+        console.log("Data sync and clock started.");
+    } catch (e) {
+        console.error("Error during data loading:", e);
+    }
 });
 
 // Icon Refresher - Robust rendering
@@ -72,6 +81,7 @@ function setupNavigation() {
 }
 
 function switchView(viewName) {
+    console.log(`Switching view to: ${viewName}`);
     state.view = viewName;
     elements.navLinks.forEach(link => {
         link.classList.toggle('active', link.getAttribute('data-view') === viewName);
