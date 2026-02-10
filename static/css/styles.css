@@ -233,6 +233,10 @@ body {
     overflow: hidden;
 }
 
+.hidden {
+    display: none !important;
+}
+
 .view-header {
     margin-bottom: 2.5rem;
     display: flex;

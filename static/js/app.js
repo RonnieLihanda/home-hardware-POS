@@ -41,6 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupSalesLogic();
     setupInventoryLogic();
     setupPurchaseLogic();
+    setupModalLogic();
 
     // 2. Data Loading (Async)
     syncData();
@@ -87,21 +88,36 @@ function switchView(viewName) {
 }
 
 // Modal Logic
-function openModal(title, contentHtml) {
+window.openModal = function (title, contentHtml) {
     elements.modalTitle.textContent = title;
     elements.modalBody.innerHTML = contentHtml;
     elements.modalContainer.classList.remove('hidden');
     refreshIcons();
 }
 
-function closeModal() {
+window.closeModal = function () {
     elements.modalContainer.classList.add('hidden');
 }
 
-elements.closeModalBtn.addEventListener('click', closeModal);
-window.onclick = (event) => {
-    if (event.target == elements.modalContainer) closeModal();
-};
+function setupModalLogic() {
+    // 1. Close button (Event Delegation)
+    elements.modalContainer.addEventListener('click', (e) => {
+        if (e.target.classList.contains('close-modal') || e.target.closest('.close-modal')) {
+            window.closeModal();
+        }
+        // 2. Overlay click
+        if (e.target === elements.modalContainer) {
+            window.closeModal();
+        }
+    });
+
+    // 3. Escape key support
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !elements.modalContainer.classList.contains('hidden')) {
+            window.closeModal();
+        }
+    });
+}
 
 // Clock Function
 function startClock() {
