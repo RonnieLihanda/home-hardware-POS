@@ -538,6 +538,10 @@ tr:hover td {
 }
 
 .items-grid {
+    flex: 1;
+    /* Key to internal scrolling */
+    min-height: 0;
+    /* Critical for flex scrolling */
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 1.25rem;
@@ -580,16 +584,18 @@ tr:hover td {
     border-radius: 2rem;
     display: flex;
     flex-direction: column;
-    padding: 2rem;
+    padding: 2rem 2rem 0 2rem;
+    /* Reduce bottom padding */
     box-shadow: var(--shadow-lg);
     height: 100%;
+    overflow: hidden;
+    /* Lock the sidebar itself */
 }
 
 .cart-summary {
     background: #f8fafc;
     border-top: 1px solid var(--border);
-    margin: 0 -2rem -2rem -2rem;
-    /* Bleed out into sidebar padding */
+    margin: 0 -2rem 0 -2rem;
     padding: 2rem;
     border-radius: 0 0 2rem 2rem;
     display: flex;
@@ -725,6 +731,8 @@ tr:hover td {
 
 .cart-items {
     flex: 1;
+    min-height: 0;
+    /* Ensure this area scrolls */
     overflow-y: auto;
     margin-bottom: 1.75rem;
     padding-right: 0.5rem;

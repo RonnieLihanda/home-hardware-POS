@@ -92,11 +92,13 @@ window.openModal = function (title, contentHtml) {
     elements.modalTitle.textContent = title;
     elements.modalBody.innerHTML = contentHtml;
     elements.modalContainer.classList.remove('hidden');
+    elements.modalContainer.style.display = 'flex';
     refreshIcons();
 }
 
 window.closeModal = function () {
     elements.modalContainer.classList.add('hidden');
+    elements.modalContainer.style.display = 'none';
 }
 
 function setupModalLogic() {
