@@ -93,45 +93,46 @@
 
                 <!-- Sales View (POS) -->
                 <section id="sales-view" class="view hidden">
-                    <div class="pos-layout">
-                        <div class="pos-main">
-                            <div class="search-items">
-                                <i data-lucide="search"></i>
-                                <input type="text" id="item-search" placeholder="Search by name or code (F3)...">
+                    <div class="pos-view-content">
+                        <div class="pos-layout">
+                            <div class="pos-main">
+                                <div class="search-items">
+                                    <i data-lucide="search"></i>
+                                    <input type="text" id="item-search" placeholder="Search by name or code (F3)...">
+                                </div>
+                                <div class="items-grid" id="pos-items-grid">
+                                    <!-- Inventory items will be loaded here -->
+                                </div>
                             </div>
-                            <div class="items-grid" id="pos-items-grid">
-                                <!-- Inventory items will be loaded here -->
-                            </div>
+                            <aside class="pos-sidebar">
+                                <div class="cart-header">
+                                    <h2>Current Sale</h2>
+                                    <button class="btn-clear" id="clear-cart">Clear</button>
+                                </div>
+                                <div class="cart-items" id="cart-items-list">
+                                    <!-- Cart items will appear here -->
+                                </div>
+                                <div class="cart-summary">
+                                    <div class="summary-line">
+                                        <span>Subtotal</span>
+                                        <span id="cart-subtotal">KSh 0.00</span>
+                                    </div>
+                                    <div class="summary-line">
+                                        <span>Discount (%)</span>
+                                        <input type="number" id="cart-discount" value="0" min="0" max="100">
+                                    </div>
+                                    <div class="summary-line total">
+                                        <span>Total Amount Due</span>
+                                        <span id="cart-total">KSh 0.00</span>
+                                    </div>
+                                    <div class="payment-methods">
+                                        <button class="btn-pay" data-method="Cash">Cash</button>
+                                        <button class="btn-pay" data-method="M-Pesa">M-Pesa</button>
+                                    </div>
+                                    <button class="btn-complete-sale" id="complete-sale">Complete Sale (F1)</button>
+                                </div>
+                            </aside>
                         </div>
-                        <aside class="pos-sidebar">
-                            <div class="cart-header">
-                                <h2>Current Sale</h2>
-                                <button class="btn-clear" id="clear-cart">Clear</button>
-                            </div>
-                            <div class="cart-items" id="cart-items-list">
-                                <!-- Cart items will appear here -->
-                            </div>
-                            <div class="cart-summary">
-                                <div class="summary-line">
-                                    <span>Subtotal</span>
-                                    <span id="cart-subtotal">KSh 0.00</span>
-                                </div>
-                                <div class="summary-line">
-                                    <span>Discount (%)</span>
-                                    <input type="number" id="cart-discount" value="0" min="0" max="100">
-                                </div>
-                                <div class="summary-line total">
-                                    <span>Total Amount Due</span>
-                                    <span id="cart-total">KSh 0.00</span>
-                                </div>
-                                <div class="payment-methods">
-                                    <button class="btn-pay" data-method="Cash">Cash</button>
-                                    <button class="btn-pay" data-method="M-Pesa">M-Pesa</button>
-                                </div>
-                                <button class="btn-complete-sale" id="complete-sale">Complete Sale (F1)</button>
-                            </div>
-                        </aside>
-                    </div>
                 </section>
 
                 <!-- Inventory View -->
